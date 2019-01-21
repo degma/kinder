@@ -22,6 +22,9 @@ const mainNavigation = props => (
               <li>
                 <NavLink to="/events">Events</NavLink>
               </li>
+              <li>
+                <NavLink to="/products">Products</NavLink>
+              </li>
               {context.token && (
                 <React.Fragment>
                   <li>

@@ -37,6 +37,7 @@ module.exports = {
       if (!creator) {
         throw new Error('User not found.');
       }
+      console.log(creator);
       creator.createdProduct.push(event);
       await creator.save();
 

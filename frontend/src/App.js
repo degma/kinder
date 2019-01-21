@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import AuthPage from './pages/Auth';
 import BookingsPage from './pages/Bookings';
 import EventsPage from './pages/Events';
+import ProductsPage from './pages/Products';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
 
@@ -46,6 +47,7 @@ class App extends Component {
                   <Route path="/auth" component={AuthPage} />
                 )}
                 <Route path="/events" component={EventsPage} />
+                <Route path="/products" component={ProductsPage} />
                 {this.state.token && (
                   <Route path="/bookings" component={BookingsPage} />
                 )}
