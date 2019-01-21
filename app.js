@@ -32,14 +32,21 @@ app.use(
   })
 );
 
+console.log (
+  `mongodb+srv://${process.env.MONGO_USER}:${
+    process.env.MONGO_PASSWORD
+  }@${process.env.MONGO_SERVER}/${process.env.MONGO_DB}?retryWrites=true`
+);
 mongoose
-  .connect(
+/*   .connect(
     `mongodb+srv://${process.env.MONGO_USER}:${
       process.env.MONGO_PASSWORD
-    }@cluster0-ntrwp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
-  )
+    }@${process.env.MONGO_SERVER}/${process.env.MONGO_DB}?retryWrites=true`
+  ) */
+  .connect('mongodb://localhost:27017/kinderDB', {useNewUrlParser: true})
   .then(() => {
     app.listen(8000);
+    console.log("mongoDB -> OK");
   })
   .catch(err => {
     console.log(err);

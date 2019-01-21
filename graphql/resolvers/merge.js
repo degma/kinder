@@ -44,6 +44,14 @@ const transformEvent = event => {
   };
 };
 
+const transformProduct = product => {
+  return {
+    ...product._doc,
+    _id: product.id,
+    creator: user.bind(this, product.creator)
+  };
+};
+
 const transformBooking = booking => {
   return {
     ...booking._doc,
@@ -57,6 +65,7 @@ const transformBooking = booking => {
 
 exports.transformEvent = transformEvent;
 exports.transformBooking = transformBooking;
+exports.transformProduct = transformProduct;
 
 // exports.user = user;
 // exports.events = events;

@@ -1,7 +1,8 @@
 {
     "env": {
-        "MONGO_USER": "maximilian",
-        "MONGO_PASSWORD": "Mr5CLDvXP3zoSo4s",
-        "MONGO_DB": "events-react-dev"
+        "MONGO_USER": "kindertest",
+        "MONGO_PASSWORD": "1q2w3e4r5t6y",
+        "MONGO_DB": "kinderDB",
+        "MONGO_SERVER": "//127.0.0.1:27017"
     }
 }
