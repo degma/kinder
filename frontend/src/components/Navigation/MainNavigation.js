@@ -8,34 +8,34 @@ const mainNavigation = props => (
   <AuthContext.Consumer>
     {context => {
       return (
-        <header className="main-navigation">
-          <div className="main-navigation__logo">
-            <h1>EasyEvent</h1>
-          </div>
-          <nav className="main-navigation__items">
-            <ul>
+        <header>
+          <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a className="navbar-brand" href="/">Navbar</a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav mr-auto">
               {!context.token && (
-                <li>
-                  <NavLink to="/auth">Authenticate</NavLink>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/auth">Authenticate</NavLink>
                 </li>
               )}
-              <li>
-                <NavLink to="/events">Events</NavLink>
-              </li>
-              <li>
-                <NavLink to="/products">Products</NavLink>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/products">Articulos</NavLink>
               </li>
               {context.token && (
                 <React.Fragment>
-                  <li>
-                    <NavLink to="/bookings">Bookings</NavLink>
+                <li className="nav-item">
+                    <NavLink className="nav-link" to="/bookings">Bookings</NavLink>
                   </li>
-                  <li>
-                    <button onClick={context.logout}>Logout</button>
+                  <li className="nav-item">
+                    <button className="nav-link" onClick={context.logout}>Logout</button>
                   </li>
                 </React.Fragment>
               )}
             </ul>
+          </div>
           </nav>
         </header>
       );

@@ -1,5 +1,7 @@
 const Event = require('../../models/event');
 const User = require('../../models/user');
+const Category = require('../../models/category');
+const Product = require('../../models/product');
 const { dateToString } = require('../../helpers/date');
 
 const events = async eventIds => {
@@ -52,6 +54,14 @@ const transformProduct = product => {
   };
 };
 
+const transformCategory = category => {
+  return {
+    ...category._doc,
+    _id: category.id,
+    creator: user.bind(this, category.creator)
+  };
+};
+
 const transformBooking = booking => {
   return {
     ...booking._doc,
@@ -66,6 +76,7 @@ const transformBooking = booking => {
 exports.transformEvent = transformEvent;
 exports.transformBooking = transformBooking;
 exports.transformProduct = transformProduct;
+exports.transformCategory = transformCategory;
 
 // exports.user = user;
 // exports.events = events;

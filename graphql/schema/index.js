@@ -9,11 +9,13 @@ type Product {
   gender: String!
   name: String!
   price: Float!
+  creator: User!
 }
 
 type Category {
   _id: ID!
   name: String!
+  creator: User!
 }
 
 type Manufacturer {
