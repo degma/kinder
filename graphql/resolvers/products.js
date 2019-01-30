@@ -26,19 +26,21 @@ module.exports = {
       price: +args.productInput.price,
       creator: req.userId
     });
-    console.log(product);
+    console.log("Created product: " + product);
     let createdProduct;
     try {
       
       const result = await product.save();
+      console.log("Transformed product: " + result);
       createdProduct = transformProduct(result);
       const creator = await User.findById(req.userId);
-
+      console.log("Creator::::::::::::::::::::::::: " + result);
       if (!creator) {
         throw new Error('User not found.');
       }
       console.log(creator);
-      creator.createdProduct.push(event);
+      console.log(createdProduct);
+      creator.createdProducts.push(product);
       await creator.save();
 
       return createdProduct;

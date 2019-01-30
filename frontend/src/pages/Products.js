@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Modal from '../components/Modal/Modal';
-import Backdrop from '../components/Backdrop/Backdrop';
 import AuthContext from '../context/auth-context';
 import ProductList from '../components/Products/ProductList';
 import Spinner from '../components/Spinner/Spinner';
+// const SweetAlert = require('react-bootstrap-sweetalert');
+const SuccessIndicator = require('react-success-indicator');
 //import './Events.css';
 
 class ProductsPage extends Component {
@@ -11,6 +11,7 @@ class ProductsPage extends Component {
     creating: false,
     products: [],
     isLoading: false,
+    isSuccess: false,
     selectedEvent: null
   };
 
@@ -106,17 +107,32 @@ class ProductsPage extends Component {
             }
           });
           return { products: updatedProducts };
+
         });
-        // this.fetchProducts();
       })
       .catch(err => {
         console.log(err);
       });
+    this.cleanForm();
   };
 
   modalCancelHandler = () => {
     this.setState({ creating: false, selectedEvent: null });
   };
+
+  cleanForm = () => {
+    this.nameElRef.current.value = "";
+    this.priceElRef.current.value = "";
+    this.categoryElRef.current.value = "";
+    this.manufacturerElRef.current.value = "";
+    this.genderElRef.current.value = "";
+    this.setState({ isSuccess: true });
+
+  }
+
+  successHandler = () => {
+    this.setState({ isSuccess: false });
+  }
 
   fetchProducts() {
     this.setState({ isLoading: true });
@@ -171,66 +187,84 @@ class ProductsPage extends Component {
   render() {
     return (
       <React.Fragment>
-        {/* <div className="container-fluid"> */}
+        <div className="container-fluid">
+          {/* {this.context.token && (
+            <div className="col-md-9 pt-4 pb-4 pl-0 mx-auto">
 
-          {(this.state.creating ) && <Backdrop />}
-          {this.state.creating && (
-            <Modal
-              title="Add Event"
-              canCancel
-              canConfirm
-              onCancel={this.modalCancelHandler}
-              onConfirm={this.modalConfirmHandler}
-              confirmText="Confirm"
-            >
-              <form>
-                <div className="form-group col-md-12">
-                  <label htmlFor="inputEmail4">Nombre</label>
-                  <input type="text" id="name" ref={this.nameElRef} className="form-control" placeholder="Nombre del producto" />
+            </div>
+          )} */}
+          <div className="row">
+            <div className="col-md-3 pt-4">
+              {!this.state.isSuccess ? (
+                <div class="card w-100">
+                  <div class="card-header text-center">
+                    Ingresar Nuevo Articulo
+                    </div>
+                  <div class="card-body p-1 pt-3">
+                    <form>
+                      <div className="form-group col-md-12">
+                        <label htmlFor="inputEmail4">Nombre</label>
+                        <input type="text" id="name" ref={this.nameElRef} className="form-control" placeholder="Nombre del producto" />
+                      </div>
+                      <div className="form-group col-md-12">
+                        <label htmlFor="inputCity">Fabricante</label>
+                        <input type="text" id="manufacturer" ref={this.manufacturerElRef} className="form-control" placeholder="Fabricante" />
+                      </div>
+                      <div className="form-group col-md-12">
+                        <label htmlFor="inputEmail4">Precio</label>
+                        <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
+                      </div>
+                      <div className="form-group col-md-12">
+                        <label htmlFor="inputCity">Genero</label>
+                        <input type="text" id="gender" ref={this.genderElRef} className="form-control" placeholder="Genero" />
+                      </div>
+                      <div className="form-group col-md-12">
+                        <label htmlFor="inputState">Categoría</label>
+                        <input type="text" id="category" ref={this.categoryElRef} className="form-control" placeholder="Categoría" />
+                      </div>
+                      <div className="form-group col-md-12 text-right pt-4">
+                        <button type="button" className="btn btn-success" onClick={this.modalConfirmHandler}>+ Agregar Producto</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-                <div className="form-group col-md-12">
-                  <label htmlFor="inputCity">Fabricante</label>
-                  <input type="text" id="manufacturer" ref={this.manufacturerElRef} className="form-control" placeholder="Fabricante" />
-                </div>
-                <div className="form-group col-md-12">
-                  <label htmlFor="inputEmail4">Precio</label>
-                  <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
-                </div>
-                <div className="form-group col-md-12">
-                  <label htmlFor="inputCity">Genero</label>
-                  <input type="text" id="gender" ref={this.genderElRef} className="form-control" placeholder="Genero" />
-                </div>
-                <div className="form-group col-md-12">
-                  <label htmlFor="inputState">Categoría</label>
-                  <input type="text" id="category" ref={this.categoryElRef} className="form-control" placeholder="Categoría" />
-                </div>
-              </form>
-            </Modal>
-          )}
-          
-            
-        {this.context.token && (       
-              <div className="col-lg-4 pt-4 pb-4 pl-0 mx-auto">
-                <div className="input-group input-group-lg">
+              ) : (
+                <div class="card w-100 text-center pt-5">
+                  <div className="pt-5">
+                    <div className="form-group col-md-12">
+                      <p>
+                        <SuccessIndicator size='96px' color='green' />
+                      </p>
+                      <p>
+                        Articulo agregado!
+                    </p>
+                      <button type="button" className="btn btn-success" onClick={this.successHandler}>OK!</button>
+                    </div>
+                  </div>
+                  </div>
+                )}
+            </div>
+            <div className="col-md-9">
+              <div className="pt-4 pb-4 pl-0 mx-auto">
+                <div className="input-group input-group-lg col-md-10">
                   <div className="input-group-prepend">
                     <span className="input-group-text" id="inputGroup-sizing-lg">Buscar</span>
                   </div>
                   <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
                 </div>
-                <div className="col-lg-4 pt-4 pb-4 pl-0 mx-auto">
-                  <button type="button" className="btn btn-success" onClick={this.startCreateEventHandler}>+ Agregar Producto</button>
-                </div>
               </div>
-            
-        )}
+              {this.state.isLoading ? (
+                <div className="pt-5">
+                <Spinner />
+                </div>
+              ) : (
+                  <ProductList products={this.state.products} />
+                )}
 
-          {this.state.isLoading ? (
-            <Spinner />
-          ) : (
-              <ProductList products={this.state.products} />
-            )}
+            </div>
 
-        {/* </div> */}
+          </div>
+        </div>
 
       </React.Fragment>
     );

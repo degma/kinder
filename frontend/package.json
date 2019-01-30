@@ -5,10 +5,12 @@
   "dependencies": {
     "bootstrap": "^4.2.1",
     "react": "^16.7.0",
+    "react-bootstrap-sweetalert": "^4.4.1",
     "react-dom": "^16.7.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.2",
-    "react-select": "^2.3.0"
+    "react-select": "^2.3.0",
+    "react-success-indicator": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

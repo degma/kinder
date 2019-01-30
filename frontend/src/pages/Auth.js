@@ -85,27 +85,29 @@ class AuthPage extends Component {
 
   render() {
     return (
-      <div className="d-flex justify-content-center">
-      <div className="card w-25 ">
-      <div className="card-header">Login</div>
-        <div className="p-3">
-        <form  onSubmit={this.submitHandler}>
-          <div className="form-group">
-            <label htmlFor="email">E-Mail</label>
-            <input className="form-control" type="email" id="email" ref={this.emailEl} />
+      <div className="align-middle pt-5">
+        <div className="d-flex justify-content-center">
+          <div className="card">
+            <div className="card-header">Login</div>
+            <div className="p-2">
+              <form onSubmit={this.submitHandler}>
+                <div className="form-group">
+                  <label htmlFor="email">E-Mail</label>
+                  <input className="form-control" type="email" id="email" ref={this.emailEl} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <input className="form-control" type="password" id="password" ref={this.passwordEl} />
+                </div>
+                <div className="d-flex align-content-start flex-wrap">
+                  <button className="btn btn-primary mr-3" type="submit">Submit</button>
+                  <button className="btn btn-primary" type="button" onClick={this.switchModeHandler}>
+                    Switch to {this.state.isLogin ? 'Signup' : 'Login'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input className="form-control" type="password" id="password" ref={this.passwordEl} />
-          </div>
-          <div className="d-flex align-content-start flex-wrap">
-            <button className="btn btn-primary mr-3" type="submit">Submit</button>
-            <button className="btn btn-primary" type="button" onClick={this.switchModeHandler}>
-              Switch to {this.state.isLogin ? 'Signup' : 'Login'}
-            </button>
-          </div>
-        </form>
-        </div>
         </div>
       </div>
     );
