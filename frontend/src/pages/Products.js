@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
 import ProductList from '../components/Products/ProductList';
 import Spinner from '../components/Spinner/Spinner';
+import Select from 'react-select';
+import SearchBox from '../components/SearchBox/SearchBox';
 // const SweetAlert = require('react-bootstrap-sweetalert');
 const SuccessIndicator = require('react-success-indicator');
 //import './Events.css';
@@ -10,8 +12,10 @@ class ProductsPage extends Component {
   state = {
     creating: false,
     products: [],
+    categories: [],
     isLoading: false,
     isSuccess: false,
+    searchField: '',
     selectedEvent: null
   };
 
@@ -29,7 +33,10 @@ class ProductsPage extends Component {
   }
 
   componentDidMount() {
+    this.fetchCategs();
     this.fetchProducts();
+    console.log("Categorias" + this.fetchCategs());
+  
   }
 
   startCreateEventHandler = () => {
@@ -134,6 +141,12 @@ class ProductsPage extends Component {
     this.setState({ isSuccess: false });
   }
 
+  onSearchChange = (event) => {
+    this.setState({searchField: event.target.value});
+
+    // console.log(filteredProds);
+  }
+
   fetchProducts() {
     this.setState({ isLoading: true });
     const requestBody = {
@@ -181,10 +194,54 @@ class ProductsPage extends Component {
         }
       });
   }
+
+  fetchCategs = () => {
+    const requestBody = {
+      query: `
+          query {
+            categories {
+              _id
+              name
+            }
+          }
+        `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then(resData => {
+        const cates = resData.data.categories;
+        console.log("Seteo estado         " + cates);
+        console.log(this.isActive);
+        this.setState({ categories: cates });
+        console.log("valores en el estado" + this.categories);
+        if (this.isActive) {
+          this.setState({ categories: cates });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   componentWillUnmount() {
     this.isActive = false;
   }
   render() {
+    const filteredProds = this.state.products.filter(product => {
+      return product.name.toLowerCase().includes(this.state.searchField.toLowerCase());
+    })
     return (
       <React.Fragment>
         <div className="container-fluid">
@@ -196,11 +253,11 @@ class ProductsPage extends Component {
           <div className="row">
             <div className="col-md-3 pt-4">
               {!this.state.isSuccess ? (
-                <div class="card w-100">
-                  <div class="card-header text-center">
+                <div className="card w-100">
+                  <div className="card-header text-center">
                     Ingresar Nuevo Articulo
                     </div>
-                  <div class="card-body p-1 pt-3">
+                  <div className="card-body p-1 pt-3">
                     <form>
                       <div className="form-group col-md-12">
                         <label htmlFor="inputEmail4">Nombre</label>
@@ -218,6 +275,11 @@ class ProductsPage extends Component {
                         <label htmlFor="inputCity">Genero</label>
                         <input type="text" id="gender" ref={this.genderElRef} className="form-control" placeholder="Genero" />
                       </div>
+                      <Select 
+                        options = { this.categories }
+                        getOptionLabel = { opt => opt.name}
+                        getOptionName = { opt => opt.name}
+                      />
                       <div className="form-group col-md-12">
                         <label htmlFor="inputState">Categoría</label>
                         <input type="text" id="category" ref={this.categoryElRef} className="form-control" placeholder="Categoría" />
@@ -245,20 +307,15 @@ class ProductsPage extends Component {
                 )}
             </div>
             <div className="col-md-9">
-              <div className="pt-4 pb-4 pl-0 mx-auto">
-                <div className="input-group input-group-lg col-md-10">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-lg">Buscar</span>
-                  </div>
-                  <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" />
-                </div>
-              </div>
+
+            <SearchBox searchChange={this.onSearchChange} />
+
               {this.state.isLoading ? (
                 <div className="pt-5">
                 <Spinner />
                 </div>
               ) : (
-                  <ProductList products={this.state.products} />
+                  <ProductList products={filteredProds} />
                 )}
 
             </div>
