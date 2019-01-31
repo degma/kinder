@@ -46,6 +46,15 @@ const transformEvent = event => {
   };
 };
 
+
+const transformGender = gender => {
+  return {
+    ...gender._doc,
+    _id: gender.id
+  };
+};
+
+
 const transformProduct = product => {
   return {
     ...product._doc,
@@ -77,6 +86,7 @@ exports.transformEvent = transformEvent;
 exports.transformBooking = transformBooking;
 exports.transformProduct = transformProduct;
 exports.transformCategory = transformCategory;
+exports.transformGender = transformGender;
 
 // exports.user = user;
 // exports.events = events;

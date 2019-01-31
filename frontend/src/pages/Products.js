@@ -13,10 +13,12 @@ class ProductsPage extends Component {
     creating: false,
     products: [],
     categories: [],
+    manufacturers: [],
     isLoading: false,
     isSuccess: false,
     searchField: '',
-    selectedEvent: null
+    selectedEvent: null,
+    selectedCategory: null
   };
 
   isActive = true;
@@ -35,8 +37,11 @@ class ProductsPage extends Component {
   componentDidMount() {
     this.fetchCategs();
     this.fetchProducts();
+    this.fetchManu();
+    this.fetchGenders();
     console.log("Categorias" + this.fetchCategs());
-  
+    console.log("Genders" + this.fetchGenders());
+
   }
 
   startCreateEventHandler = () => {
@@ -47,7 +52,7 @@ class ProductsPage extends Component {
 
     const name = this.nameElRef.current.value;
     const price = +this.priceElRef.current.value;
-    const category = this.categoryElRef.current.value;
+    const category = this.state.selectedCategory;
     const manufacturer = this.manufacturerElRef.current.value;
     const gender = this.genderElRef.current.value;
 
@@ -130,7 +135,7 @@ class ProductsPage extends Component {
   cleanForm = () => {
     this.nameElRef.current.value = "";
     this.priceElRef.current.value = "";
-    this.categoryElRef.current.value = "";
+
     this.manufacturerElRef.current.value = "";
     this.genderElRef.current.value = "";
     this.setState({ isSuccess: true });
@@ -142,7 +147,7 @@ class ProductsPage extends Component {
   }
 
   onSearchChange = (event) => {
-    this.setState({searchField: event.target.value});
+    this.setState({ searchField: event.target.value });
 
     // console.log(filteredProds);
   }
@@ -195,7 +200,7 @@ class ProductsPage extends Component {
       });
   }
 
-  fetchCategs = () => {
+  fetchCategs() {
     const requestBody = {
       query: `
           query {
@@ -222,12 +227,89 @@ class ProductsPage extends Component {
       })
       .then(resData => {
         const cates = resData.data.categories;
-        console.log("Seteo estado         " + cates);
-        console.log(this.isActive);
-        this.setState({ categories: cates });
-        console.log("valores en el estado" + this.categories);
+
         if (this.isActive) {
           this.setState({ categories: cates });
+          console.log(this.state.categories);
+          console.log("productos" + this.state.products);
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  fetchManu() {
+    const requestBody = {
+      query: `
+          query {
+            manufacturers {
+              _id
+              name
+            }
+          }
+        `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then(resData => {
+        const manus = resData.data.categories;
+
+        if (this.isActive) {
+          this.setState({ manufacturers: manus });
+          console.log(this.state.manus);
+
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  fetchGenders() {
+    const requestBody = {
+      query: `
+          query {
+            genders {
+              _id
+              name
+            }
+          }
+        `
+    };
+
+    fetch('http://localhost:8000/graphql', {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then(resData => {
+        const genders = resData.data.categories;
+
+        if (this.isActive) {
+          this.setState({ genders: genders });
+          console.log(this.state.manus);
+
         }
       })
       .catch(err => {
@@ -238,9 +320,21 @@ class ProductsPage extends Component {
   componentWillUnmount() {
     this.isActive = false;
   }
+
+  changeSelect = selectedCategory => {
+    if (selectedCategory !== null) {
+      this.setState({ selectedCategory: selectedCategory.name });
+    } else {
+      this.setState({ selectedCategory: '' });
+    }
+
+    console.log("selected Cat: " + this.state.selectedCategory);
+  }
+
   render() {
     const filteredProds = this.state.products.filter(product => {
       return product.name.toLowerCase().includes(this.state.searchField.toLowerCase());
+      // return Object.keys(product).some(key => product[key].toString().search(this.state.searchField.toLowerCase()) !== -1);
     })
     return (
       <React.Fragment>
@@ -264,25 +358,49 @@ class ProductsPage extends Component {
                         <input type="text" id="name" ref={this.nameElRef} className="form-control" placeholder="Nombre del producto" />
                       </div>
                       <div className="form-group col-md-12">
-                        <label htmlFor="inputCity">Fabricante</label>
-                        <input type="text" id="manufacturer" ref={this.manufacturerElRef} className="form-control" placeholder="Fabricante" />
-                      </div>
-                      <div className="form-group col-md-12">
                         <label htmlFor="inputEmail4">Precio</label>
                         <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
                       </div>
                       <div className="form-group col-md-12">
-                        <label htmlFor="inputCity">Genero</label>
-                        <input type="text" id="gender" ref={this.genderElRef} className="form-control" placeholder="Genero" />
+                        <label htmlFor="inputCity">Fabricante</label>
+                        <Select
+                          options={this.state.categories}
+                          onChange={this.changeSelect}
+                          id="category"
+                          isSearchable={true}
+                          isClearable={true}
+                          className="basic-single"
+                          getOptionLabel={opt => opt.name}
+                          getOptionValue={opt => opt._id}
+                        />
                       </div>
-                      <Select 
-                        options = { this.categories }
-                        getOptionLabel = { opt => opt.name}
-                        getOptionName = { opt => opt.name}
-                      />
+                      <div className="form-group col-md-12">
+                        <label htmlFor="inputCity">Genero</label>
+                        <Select
+                          options={this.state.categories}
+                          onChange={this.changeSelect}
+                          id="category"
+                          isSearchable={true}
+                          isClearable={true}
+                          className="basic-single"
+                          getOptionLabel={opt => opt.name}
+                          getOptionValue={opt => opt._id}
+                        />
+                      </div>
+
+
                       <div className="form-group col-md-12">
                         <label htmlFor="inputState">Categoría</label>
-                        <input type="text" id="category" ref={this.categoryElRef} className="form-control" placeholder="Categoría" />
+                        <Select
+                          options={this.state.categories}
+                          onChange={this.changeSelect}
+                          id="category"
+                          isSearchable={true}
+                          isClearable={true}
+                          className="basic-single"
+                          getOptionLabel={opt => opt.name}
+                          getOptionValue={opt => opt._id}
+                        />
                       </div>
                       <div className="form-group col-md-12 text-right pt-4">
                         <button type="button" className="btn btn-success" onClick={this.modalConfirmHandler}>+ Agregar Producto</button>
@@ -291,28 +409,28 @@ class ProductsPage extends Component {
                   </div>
                 </div>
               ) : (
-                <div class="card w-100 text-center pt-5">
-                  <div className="pt-5">
-                    <div className="form-group col-md-12">
-                      <p>
-                        <SuccessIndicator size='96px' color='green' />
-                      </p>
-                      <p>
-                        Articulo agregado!
+                  <div className="card w-100 text-center pt-5">
+                    <div className="pt-5">
+                      <div className="form-group col-md-12">
+                        <p>
+                          <SuccessIndicator size='96px' color='green' />
+                        </p>
+                        <p>
+                          Articulo agregado!
                     </p>
-                      <button type="button" className="btn btn-success" onClick={this.successHandler}>OK!</button>
+                        <button type="button" className="btn btn-success" onClick={this.successHandler}>OK!</button>
+                      </div>
                     </div>
-                  </div>
                   </div>
                 )}
             </div>
             <div className="col-md-9">
 
-            <SearchBox searchChange={this.onSearchChange} />
+              <SearchBox searchChange={this.onSearchChange} />
 
               {this.state.isLoading ? (
                 <div className="pt-5">
-                <Spinner />
+                  <Spinner />
                 </div>
               ) : (
                   <ProductList products={filteredProds} />
