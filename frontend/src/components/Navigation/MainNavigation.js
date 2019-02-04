@@ -10,32 +10,29 @@ const mainNavigation = props => (
       return (
         <header>
           <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a className="navbar-brand" href="/">Kinder Kids</a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/products">Articulos</NavLink>
-              </li>
-              {!context.token && (
+            <a className="navbar-brand" href="/">Kinder Kids</a>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul className="navbar-nav mr-auto">
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/auth">Ingresar</NavLink>
+                  <NavLink className="nav-link" to="/products">Articulos</NavLink>
                 </li>
-              )}
-              {context.token && (
-                <React.Fragment>
-                <li className="nav-item">
-                    <NavLink className="nav-link" to="/bookings">Bookings</NavLink>
-                  </li>
+                {!context.token && (
                   <li className="nav-item">
-                    <button className="nav-link" onClick={context.logout}>Logout</button>
+                    <NavLink className="nav-link" to="/auth">Ingresar</NavLink>
                   </li>
-                </React.Fragment>
-              )}
-            </ul>
-          </div>
+                )}
+                {context.token && (
+                  <React.Fragment>
+                    <li className="nav-item">
+                      <button className="btn btn-secondary btn-sm" onClick={context.logout}>Logout</button>
+                    </li>
+                  </React.Fragment>
+                )}
+              </ul>
+            </div>
           </nav>
         </header>
       );

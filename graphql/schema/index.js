@@ -4,9 +4,9 @@ module.exports = buildSchema(`
 
 type Product {
   _id: ID!
-  category: String!
-  manufacturer: String!
-  gender: String!
+  category: Category!
+  manufacturer: Manufacturer!
+  gender: Gender!
   name: String!
   price: Float!
   creator: User!
@@ -25,6 +25,7 @@ type Manufacturer {
   phone: String!
   primary_contact_name: String!
   primary_contact_phone: String!
+  creator: User!
 }
 
 type Gender {
@@ -75,9 +76,9 @@ input UserInput {
 }
 
 input ProductInput {
-  category: String!
-  manufacturer: String!
-  gender: String!
+  category: ID!
+  manufacturer: ID!
+  gender: ID!
   name: String!
   price: Float!
 }
@@ -92,6 +93,7 @@ input ManufacturerInput {
   phone: String!
   primary_contact_name: String!
   primary_contact_phone: String!
+  
 }
 
 input GenderInput {

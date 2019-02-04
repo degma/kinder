@@ -14,11 +14,14 @@ class ProductsPage extends Component {
     products: [],
     categories: [],
     manufacturers: [],
+    genders: [],
     isLoading: false,
     isSuccess: false,
     searchField: '',
-    selectedEvent: null,
-    selectedCategory: null
+    selectedCategory: null,
+    selectedGender: null,
+    selectedManufacturer: null,
+    selectedOption: []
   };
 
   isActive = true;
@@ -52,9 +55,9 @@ class ProductsPage extends Component {
 
     const name = this.nameElRef.current.value;
     const price = +this.priceElRef.current.value;
-    const category = this.state.selectedCategory;
-    const manufacturer = this.manufacturerElRef.current.value;
-    const gender = this.genderElRef.current.value;
+    const category = this.state.selectedCategory._id;
+    const manufacturer = this.state.selectedManufacturer._id.toString();
+    const gender = this.state.selectedGender._id;
 
     if (
       name.trim().length === 0 ||
@@ -72,12 +75,21 @@ class ProductsPage extends Component {
     const requestBody = {
       query: `
           mutation {
-            createProduct(productInput: {name: "${name}", manufacturer: "${manufacturer}", price: ${price}, gender: "${gender}", category: "${category}"}) {
+            createProduct(productInput: {name: "${name}", manufacturer: "${manufacturer}", price: ${price}, gender: "${gender}", category: "${category}"} ) {
               _id
               name
-              manufacturer
-              gender
-              category
+              manufacturer{
+                _id
+                name
+              }
+              gender {
+                _id
+                name
+              }
+              category {
+                _id
+                name
+              }
               price
               creator{
                 _id
@@ -107,12 +119,20 @@ class ProductsPage extends Component {
       .then(resData => {
         this.setState(prevState => {
           const updatedProducts = [...prevState.products];
+          console.log(resData.data.createProduct);
+          console.log("Updted PRODUCTS --->" + updatedProducts);
           updatedProducts.push({
             _id: resData.data.createProduct._id,
             name: resData.data.createProduct.name,
-            category: resData.data.createProduct.category,
-            manufacturer: resData.data.createProduct.manufacturer,
-            gender: resData.data.createProduct.gender,
+            category: {
+              name: resData.data.createProduct.category.name
+            },
+            manufacturer: {
+              name: resData.data.createProduct.manufacturer.name
+            },
+            gender: {
+              name: resData.data.createProduct.gender.name
+            },
             price: resData.data.createProduct.price,
             creator: {
               _id: this.context.userId
@@ -160,9 +180,18 @@ class ProductsPage extends Component {
             products {
               _id
               name
-              category
-              manufacturer
-              gender
+              category{
+                _id
+                name
+              }
+              manufacturer {
+                _id
+                name
+              }
+              gender{
+                _id
+                name
+              }
               price
               creator{
                 _id
@@ -265,11 +294,11 @@ class ProductsPage extends Component {
         return res.json();
       })
       .then(resData => {
-        const manus = resData.data.categories;
+        const manus = resData.data.manufacturers;
 
         if (this.isActive) {
           this.setState({ manufacturers: manus });
-          console.log(this.state.manus);
+          console.log(this.state.manufacturers);
 
         }
       })
@@ -304,11 +333,11 @@ class ProductsPage extends Component {
         return res.json();
       })
       .then(resData => {
-        const genders = resData.data.categories;
+        const genders = resData.data.genders;
 
         if (this.isActive) {
           this.setState({ genders: genders });
-          console.log(this.state.manus);
+          console.log(this.state.genders);
 
         }
       })
@@ -321,20 +350,39 @@ class ProductsPage extends Component {
     this.isActive = false;
   }
 
-  changeSelect = selectedCategory => {
-    if (selectedCategory !== null) {
-      this.setState({ selectedCategory: selectedCategory.name });
+  changeSelectManu = selectedOption => {
+
+    if (selectedOption !== null) {
+      this.setState({ selectedManufacturer: selectedOption });
+      console.log(this.state.selectedManufacturer);
+    } else {
+      this.setState({ selectedManufacturer: '' });
+    }
+  }
+
+  changeSelectCate = selectedOption => {
+
+    if (selectedOption !== null) {
+      this.setState({ selectedCategory: selectedOption });
+      console.log(this.state.selectedCategory);
     } else {
       this.setState({ selectedCategory: '' });
     }
+  }
+  changeSelectGender = selectedOption => {
 
-    console.log("selected Cat: " + this.state.selectedCategory);
+    if (selectedOption !== null) {
+      this.setState({ selectedGender: selectedOption });
+      console.log(this.state.selectedGender);
+    } else {
+      this.setState({ selectedGender: '' });
+    }
   }
 
   render() {
     const filteredProds = this.state.products.filter(product => {
       return product.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-      // return Object.keys(product).some(key => product[key].toString().search(this.state.searchField.toLowerCase()) !== -1);
+     
     })
     return (
       <React.Fragment>
@@ -364,8 +412,9 @@ class ProductsPage extends Component {
                       <div className="form-group col-md-12">
                         <label htmlFor="inputCity">Fabricante</label>
                         <Select
-                          options={this.state.categories}
-                          onChange={this.changeSelect}
+                          options={this.state.manufacturers}
+                          onChange={this.changeSelectManu}
+                          ref={this.manufacturerElRef}
                           id="category"
                           isSearchable={true}
                           isClearable={true}
@@ -377,9 +426,10 @@ class ProductsPage extends Component {
                       <div className="form-group col-md-12">
                         <label htmlFor="inputCity">Genero</label>
                         <Select
-                          options={this.state.categories}
-                          onChange={this.changeSelect}
-                          id="category"
+                          options={this.state.genders}
+                          onChange={this.changeSelectGender}
+                          ref={this.genderElRef}
+                          id="gender"
                           isSearchable={true}
                           isClearable={true}
                           className="basic-single"
@@ -387,13 +437,12 @@ class ProductsPage extends Component {
                           getOptionValue={opt => opt._id}
                         />
                       </div>
-
-
                       <div className="form-group col-md-12">
                         <label htmlFor="inputState">Categoría</label>
                         <Select
                           options={this.state.categories}
-                          onChange={this.changeSelect}
+                          onChange={this.changeSelectCate}
+                          ref={this.categoryElRef}
                           id="category"
                           isSearchable={true}
                           isClearable={true}

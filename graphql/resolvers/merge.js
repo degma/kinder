@@ -1,7 +1,8 @@
 const Event = require('../../models/event');
 const User = require('../../models/user');
 const Category = require('../../models/category');
-const Product = require('../../models/product');
+const Gender = require('../../models/gender');
+const Manufacturer = require('../../models/manufacturer');
 const { dateToString } = require('../../helpers/date');
 
 const events = async eventIds => {
@@ -37,6 +38,44 @@ const user = async userId => {
   }
 };
 
+
+const gender = async genderId => {
+  try {
+    const gender = await Gender.findById(genderId);
+    return {
+      ...gender._doc,
+      _id: gender.id,
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const manufacturer = async manufacturerId => {
+  try {
+    const manufacturer = await Manufacturer.findById(manufacturerId);
+    return {
+      ...manufacturer._doc,
+      _id: manufacturer.id,
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
+const category = async categoryId => {
+  try {
+    const category = await Category.findById(categoryId);
+    return {
+      ...category._doc,
+      _id: category.id,
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
+
 const transformEvent = event => {
   return {
     ...event._doc,
@@ -59,7 +98,18 @@ const transformProduct = product => {
   return {
     ...product._doc,
     _id: product.id,
+    gender: gender.bind(this, product.gender),
+    manufacturer: manufacturer.bind(this, product.manufacturer),
+    category: category.bind(this, product.category),
     creator: user.bind(this, product.creator)
+  };
+};
+
+const transformManufacturer = manufacturer => {
+  return {
+    ...manufacturer._doc,
+    _id: manufacturer.id,
+    creator: user.bind(this, manufacturer.creator)
   };
 };
 
@@ -87,7 +137,7 @@ exports.transformBooking = transformBooking;
 exports.transformProduct = transformProduct;
 exports.transformCategory = transformCategory;
 exports.transformGender = transformGender;
-
+exports.transformManufacturer = transformManufacturer;
 // exports.user = user;
 // exports.events = events;
 // exports.singleEvent = singleEvent;

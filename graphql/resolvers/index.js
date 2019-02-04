@@ -4,14 +4,15 @@ const bookingResolver = require('./booking');
 const productResolver = require('./products');
 const categoryResolver = require('./categories');
 const genderResolver = require('./genders');
-
+const manufaturerResolver = require('./manufacturers');
 const rootResolver = {
   ...authResolver,
   ...eventsResolver,
   ...bookingResolver,
   ...productResolver,
   ...categoryResolver,
-  ...genderResolver
+  ...genderResolver,
+  ...manufaturerResolver
 };
 
 module.exports = rootResolver;

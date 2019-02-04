@@ -9,16 +9,16 @@ const productSchema = new Schema(
       required: true
     },
     category: {
-      type: String,
-      required: true
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
     },
     gender: {
-      type: String,
-      required: true
+      type: Schema.Types.ObjectId,
+      ref: 'Gender'
     },
     manufacturer: {
-      type: String,
-      required: true
+      type: Schema.Types.ObjectId,
+      ref: 'Manufacturer'
     },
     price: {
       type: Number,
@@ -27,11 +27,11 @@ const productSchema = new Schema(
     creator: {
       type: Schema.Types.ObjectId,
       ref: 'User'
-  }
-  },   
-    { 
-      timestamps: true 
     }
+  },
+  {
+    timestamps: true
+  }
 );
 
 module.exports = mongoose.model('Product', productSchema);

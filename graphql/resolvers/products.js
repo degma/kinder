@@ -1,4 +1,7 @@
 const Product = require('../../models/product');
+const Manufacturer = require('../../models/manufacturer');
+const Category = require('../../models/category');
+const Gender = require('../../models/gender');
 const User = require('../../models/user');
 
 const { transformProduct } = require('./merge');
@@ -18,11 +21,14 @@ module.exports = {
     if (!req.isAuth) {
       throw new Error('Unauthenticated!');
     }
+    const fetchedCategory = await Category.findOne({_id: args.productInput.category });
+    const fetchedManufacturer = await Manufacturer.findOne({_id: args.productInput.manufacturer });
+    const fetchedGender = await Gender.findOne({_id: args.productInput.gender });
     const product = new Product({
       name: args.productInput.name,
-      category: args.productInput.category,
-      gender: args.productInput.gender,
-      manufacturer: args.productInput.manufacturer,
+      category: fetchedCategory,
+      gender: fetchedGender,
+      manufacturer: fetchedManufacturer,
       price: +args.productInput.price,
       creator: req.userId
     });
