@@ -382,101 +382,92 @@ class ProductsPage extends Component {
   render() {
     const filteredProds = this.state.products.filter(product => {
       return product.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-     
+
     })
     return (
       <React.Fragment>
         <div className="container-fluid">
-          {/* {this.context.token && (
-            <div className="col-md-9 pt-4 pb-4 pl-0 mx-auto">
-
-            </div>
-          )} */}
           <div className="row">
-            <div className="col-md-3 pt-4">
-              {!this.state.isSuccess ? (
-                <div className="card w-100">
-                  <div className="card-header text-center">
-                    Ingresar Nuevo Articulo
+            {this.context.token && (
+              <div className="col-md-3 pt-4">
+                {!this.state.isSuccess ? (
+                  <div className="card w-100">
+                    <div className="card-header text-center">
+                      Ingresar Nuevo Articulo
                     </div>
-                  <div className="card-body p-1 pt-3">
-                    <form>
-                      <div className="form-group col-md-12">
-                        <label htmlFor="inputEmail4">Nombre</label>
-                        <input type="text" id="name" ref={this.nameElRef} className="form-control" placeholder="Nombre del producto" />
-                      </div>
-                      <div className="form-group col-md-12">
-                        <label htmlFor="inputEmail4">Precio</label>
-                        <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
-                      </div>
-                      <div className="form-group col-md-12">
-                        <label htmlFor="inputCity">Fabricante</label>
-                        <Select
-                          options={this.state.manufacturers}
-                          onChange={this.changeSelectManu}
-                          ref={this.manufacturerElRef}
-                          id="category"
-                          isSearchable={true}
-                          isClearable={true}
-                          className="basic-single"
-                          getOptionLabel={opt => opt.name}
-                          getOptionValue={opt => opt._id}
-                        />
-                      </div>
-                      <div className="form-group col-md-12">
-                        <label htmlFor="inputCity">Genero</label>
-                        <Select
-                          options={this.state.genders}
-                          onChange={this.changeSelectGender}
-                          ref={this.genderElRef}
-                          id="gender"
-                          isSearchable={true}
-                          isClearable={true}
-                          className="basic-single"
-                          getOptionLabel={opt => opt.name}
-                          getOptionValue={opt => opt._id}
-                        />
-                      </div>
-                      <div className="form-group col-md-12">
-                        <label htmlFor="inputState">Categoría</label>
-                        <Select
-                          options={this.state.categories}
-                          onChange={this.changeSelectCate}
-                          ref={this.categoryElRef}
-                          id="category"
-                          isSearchable={true}
-                          isClearable={true}
-                          className="basic-single"
-                          getOptionLabel={opt => opt.name}
-                          getOptionValue={opt => opt._id}
-                        />
-                      </div>
-                      <div className="form-group col-md-12 text-right pt-4">
-                        <button type="button" className="btn btn-success" onClick={this.modalConfirmHandler}>+ Agregar Producto</button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              ) : (
-                  <div className="card w-100 text-center pt-5">
-                    <div className="pt-5">
-                      <div className="form-group col-md-12">
-                        <p>
-                          <SuccessIndicator size='96px' color='green' />
-                        </p>
-                        <p>
-                          Articulo agregado!
-                    </p>
-                        <button type="button" className="btn btn-success" onClick={this.successHandler}>OK!</button>
-                      </div>
+                    <div className="card-body p-1 pt-3">
+                      <form>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputEmail4">Nombre</label>
+                          <input type="text" id="name" ref={this.nameElRef} className="form-control" placeholder="Nombre del producto" />
+                        </div>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputEmail4">Precio</label>
+                          <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
+                        </div>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputCity">Fabricante</label>
+                          <Select
+                            options={this.state.manufacturers}
+                            onChange={this.changeSelectManu}
+                            ref={this.manufacturerElRef}
+                            id="category"
+                            isSearchable={true}
+                            isClearable={true}
+                            className="basic-single"
+                            getOptionLabel={opt => opt.name}
+                            getOptionValue={opt => opt._id}
+                          />
+                        </div>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputCity">Genero</label>
+                          <Select
+                            options={this.state.genders}
+                            onChange={this.changeSelectGender}
+                            ref={this.genderElRef}
+                            id="gender"
+                            isSearchable={true}
+                            isClearable={true}
+                            className="basic-single"
+                            getOptionLabel={opt => opt.name}
+                            getOptionValue={opt => opt._id}
+                          />
+                        </div>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputState">Categoría</label>
+                          <Select
+                            options={this.state.categories}
+                            onChange={this.changeSelectCate}
+                            ref={this.categoryElRef}
+                            id="category"
+                            isSearchable={true}
+                            isClearable={true}
+                            className="basic-single"
+                            getOptionLabel={opt => opt.name}
+                            getOptionValue={opt => opt._id}
+                          />
+                        </div>
+                        <div className="form-group col-md-12 text-right pt-4">
+                          <button type="button" className="btn btn-success" onClick={this.modalConfirmHandler}>+ Agregar Producto</button>
+                        </div>
+                      </form>
                     </div>
                   </div>
-                )}
-            </div>
+                ) : (
+                    <div className="card w-100 text-center pt-5">
+                      <div className="pt-5">
+                        <div className="form-group col-md-12">
+                          <p><SuccessIndicator size='96px' color='green' /></p>
+                          <p> Articulo agregado! </p>
+                          <button type="button" className="btn btn-success" onClick={this.successHandler}>OK!</button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+              </div>
+            )}
             <div className="col-md-9">
-
               <SearchBox searchChange={this.onSearchChange} />
-
               {this.state.isLoading ? (
                 <div className="pt-5">
                   <Spinner />

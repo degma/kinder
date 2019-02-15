@@ -4,7 +4,7 @@ const SearchBox =({searchfield, searchChange}) => {
     return (
             
               <div className="pt-4 pb-4 pl-0 mx-auto">
-                <div className="input-group input-group-lg col-md-10">
+                <div className="input-group input-group-lg">
                   <div className="input-group-prepend">
                     <span className="input-group-text" id="inputGroup-sizing-lg">Buscar</span>
                   </div>

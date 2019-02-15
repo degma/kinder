@@ -3,6 +3,7 @@ const Manufacturer = require('../../models/manufacturer');
 const Category = require('../../models/category');
 const Gender = require('../../models/gender');
 const User = require('../../models/user');
+const ProductPrice = require('../../models/productprice');
 
 const { transformProduct } = require('./merge');
 
@@ -18,28 +19,43 @@ module.exports = {
     }
   },
   createProduct: async (args, req) => {
-    if (!req.isAuth) {
-      throw new Error('Unauthenticated!');
-    }
-    const fetchedCategory = await Category.findOne({_id: args.productInput.category });
-    const fetchedManufacturer = await Manufacturer.findOne({_id: args.productInput.manufacturer });
-    const fetchedGender = await Gender.findOne({_id: args.productInput.gender });
+    // if (!req.isAuth) {
+    //   throw new Error('Unauthenticated!');
+    // }
+    const fetchedCategory = await Category.findOne({_id: args.productInput.categoryId });
+    const fetchedManufacturer = await Manufacturer.findOne({_id: args.productInput.manufacturerId });
+    const fetchedGender = await Gender.findOne({_id: args.productInput.genderId });
+    
     const product = new Product({
       name: args.productInput.name,
-      category: fetchedCategory,
-      gender: fetchedGender,
-      manufacturer: fetchedManufacturer,
-      price: +args.productInput.price,
-      creator: req.userId
+      price: args.productInput.price,
+      categoryId: fetchedCategory,
+      genderId: fetchedGender,
+      manufacturerId: fetchedManufacturer,
+      creator: "5c45e81816f9cf4db8e33bb4" //req.userId
     });
+    
+    const price = new ProductPrice({
+      productId: product._id,
+      pricelistId: args.productInput.pricelistId,
+      price: args.productInput.price,
+    });
+    
     console.log("Created product: " + product);
+    
+    
     let createdProduct;
     try {
       
+      const resultprice = await price.save(); 
       const result = await product.save();
-      console.log("Transformed product: " + result);
+      console.log("Transformed product: " + product._id);      
       createdProduct = transformProduct(result);
-      const creator = await User.findById(req.userId);
+      product.productprice.push(price);
+      await product.save();
+
+      const creator = await User.findById("5c45e81816f9cf4db8e33bb4");
+      // const creator = await User.findById(req.userId);
       console.log("Creator::::::::::::::::::::::::: " + result);
       if (!creator) {
         throw new Error('User not found.');

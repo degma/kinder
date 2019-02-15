@@ -8,22 +8,26 @@ const productSchema = new Schema(
       type: String,
       required: true
     },
-    category: {
+    description: {
+      type: String,
+      required: false
+    },
+    categoryId: {
       type: Schema.Types.ObjectId,
       ref: 'Category'
     },
-    gender: {
+    genderId: {
       type: Schema.Types.ObjectId,
       ref: 'Gender'
     },
-    manufacturer: {
+    manufacturerId: {
       type: Schema.Types.ObjectId,
       ref: 'Manufacturer'
     },
-    price: {
-      type: Number,
-      required: true
-    },
+    productprice: [{
+      type: Schema.Types.ObjectId,
+      ref: 'ProductPrice'
+    }],
     creator: {
       type: Schema.Types.ObjectId,
       ref: 'User'

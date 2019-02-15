@@ -5,6 +5,9 @@ const productResolver = require('./products');
 const categoryResolver = require('./categories');
 const genderResolver = require('./genders');
 const manufaturerResolver = require('./manufacturers');
+const producpriceResolver = require('./productprices');
+const pricelistResolver = require('./pricelists');
+
 const rootResolver = {
   ...authResolver,
   ...eventsResolver,
@@ -12,7 +15,9 @@ const rootResolver = {
   ...productResolver,
   ...categoryResolver,
   ...genderResolver,
-  ...manufaturerResolver
+  ...manufaturerResolver,
+  ...pricelistResolver ,
+  ...producpriceResolver,
 };
 
 module.exports = rootResolver;

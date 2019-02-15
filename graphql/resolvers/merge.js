@@ -1,9 +1,13 @@
 const Event = require('../../models/event');
+const PriceList = require('../../models/priceList');
+const ProductPrice = require('../../models/productprice');
+const Product =  require('../../models/product');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const Gender = require('../../models/gender');
 const Manufacturer = require('../../models/manufacturer');
 const { dateToString } = require('../../helpers/date');
+
 
 const events = async eventIds => {
   try {
@@ -16,6 +20,7 @@ const events = async eventIds => {
   }
 };
 
+
 const singleEvent = async eventId => {
   try {
     const event = await Event.findById(eventId);
@@ -24,6 +29,17 @@ const singleEvent = async eventId => {
     throw err;
   }
 };
+
+const product = async productId => {
+  try {
+    const product = await Product.findById(productId);
+    console.log("transforming product: " + product)
+    return transformProduct(product);
+  } catch (err) {
+    throw err;
+  }
+};
+
 
 const user = async userId => {
   try {
@@ -98,9 +114,9 @@ const transformProduct = product => {
   return {
     ...product._doc,
     _id: product.id,
-    gender: gender.bind(this, product.gender),
-    manufacturer: manufacturer.bind(this, product.manufacturer),
-    category: category.bind(this, product.category),
+    genderId: gender.bind(this, product.genderId),
+    manufacturerId: manufacturer.bind(this, product.manufacturerId),
+    categoryId: category.bind(this, product.categoryId),
     creator: user.bind(this, product.creator)
   };
 };
@@ -132,12 +148,51 @@ const transformBooking = booking => {
   };
 };
 
+const transformProductPrice = productprice => {
+  return {
+    ...productprice._doc,
+    _id: productprice.id,
+    productId: product.bind(this, productprice.productId),
+    pricelistId: pricelist.bind(this, productprice.pricelistId),
+  }
+};
+
+const pricelist = async pricelistId => {
+  try {
+    const pricelist = await PriceList.findById(pricelistId);
+    return transformPriceList(pricelist);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const productprice = async productpriceId => {
+  try {
+    const productprice = await ProductPrice.findById(productpriceId);
+    return transformProductPrice(productprice);
+  } catch (err) {
+    throw err;
+  }
+};
+
+const transformPriceList = pricelist => {
+  return {
+    ...pricelist._doc,
+    _id: pricelist.id,
+    productId: product.bind(this, pricelist._doc.product),
+    productpriceId: productprice.bind(this, pricelist._doc.productprice),
+  }
+};
+
 exports.transformEvent = transformEvent;
 exports.transformBooking = transformBooking;
 exports.transformProduct = transformProduct;
 exports.transformCategory = transformCategory;
 exports.transformGender = transformGender;
 exports.transformManufacturer = transformManufacturer;
+exports.transformProductPrice = transformProductPrice;
+exports.transformPriceList = transformPriceList;
+
 // exports.user = user;
 // exports.events = events;
 // exports.singleEvent = singleEvent;
