@@ -8,8 +8,9 @@ type Product {
   manufacturerId: Manufacturer!
   genderId: Gender!
   name: String!
-  description: String!
-  productprices: [ProductPrice!]!
+  description: String
+  pricelistId: PriceList!
+  productprice: [ProductPrice!]!
   creator: User!
 }
 
@@ -31,9 +32,8 @@ type PriceList {
   name: String!
   validFrom: String!
   validTo: String!
-  prices: [ProductPrice]
-  creator: User
-  
+  prodprices: [ProductPrice]
+  creator: User 
 }
 
 type Manufacturer {
@@ -71,11 +71,12 @@ input UserInput {
 }
 
 input ProductInput {
+  name: String!
+  description: String
   categoryId: ID!
   manufacturerId: ID!
   genderId: ID!
-  name: String!
-  description: String
+  pricelistId: ID!
   price: Float
 }
 
@@ -107,29 +108,29 @@ input PriceListInput {
   validFrom: String
   validTo: String
   status: String
+  prodprices: [ID]
 }
 
 type RootQuery {
-    
-    products: [Product!]!
-    categories: [Category!]!
-    genders: [Gender!]!
-    manufacturers: [Manufacturer!]!
-    login(email: String!, password: String!): AuthData!
-    pricelists: [PriceList!]!
-    productprices(pricelistId: ID!): [ProductPrice!]!
+  products: [Product!]!
+  categories: [Category!]!
+  genders: [Gender!]!
+  manufacturers: [Manufacturer!]!
+  login(email: String!, password: String!): AuthData!
+  pricelists: [PriceList!]!
+  productprices(pricelistId: ID!): [ProductPrice!]!
     
 }
 
 type RootMutation {
     
-    createUser(userInput: UserInput): User
-    createProductPrice(productpriceInput: ProductPriceInput): ProductPrice
-    createPriceList(pricelistInput: PriceListInput): PriceList
-    createProduct(productInput: ProductInput): Product
-    createCategory(categoryInput: CategoryInput): Category
-    createManufacturer(manufacturerInput: ManufacturerInput): Manufacturer
-    createGender(genderInput: GenderInput): Gender
+  createUser(userInput: UserInput): User
+  createProductPrice(productpriceInput: ProductPriceInput): ProductPrice
+  createPriceList(pricelistInput: PriceListInput): PriceList
+  createProduct(productInput: ProductInput): Product
+  createCategory(categoryInput: CategoryInput): Category
+  createManufacturer(manufacturerInput: ManufacturerInput): Manufacturer
+  createGender(genderInput: GenderInput): Gender
     
   
 }

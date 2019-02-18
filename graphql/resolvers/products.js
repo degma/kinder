@@ -4,6 +4,7 @@ const Category = require('../../models/category');
 const Gender = require('../../models/gender');
 const User = require('../../models/user');
 const ProductPrice = require('../../models/productprice');
+const PriceList = require('../../models/priceList');
 
 const { transformProduct } = require('./merge');
 
@@ -25,10 +26,10 @@ module.exports = {
     const fetchedCategory = await Category.findOne({_id: args.productInput.categoryId });
     const fetchedManufacturer = await Manufacturer.findOne({_id: args.productInput.manufacturerId });
     const fetchedGender = await Gender.findOne({_id: args.productInput.genderId });
+    const fetchedPriceList = await PriceList.findOne({_id: args.productInput.pricelistId})
     
     const product = new Product({
       name: args.productInput.name,
-      price: args.productInput.price,
       categoryId: fetchedCategory,
       genderId: fetchedGender,
       manufacturerId: fetchedManufacturer,
@@ -40,28 +41,22 @@ module.exports = {
       pricelistId: args.productInput.pricelistId,
       price: args.productInput.price,
     });
-    
-    console.log("Created product: " + product);
-    
-    
+        
     let createdProduct;
     try {
-      
-      const resultprice = await price.save(); 
-      const result = await product.save();
-      console.log("Transformed product: " + product._id);      
-      createdProduct = transformProduct(result);
       product.productprice.push(price);
-      await product.save();
-
+      const result = await product.save();
+      fetchedPriceList.prodprices.push(price);
+      await fetchedPriceList.save();
+      await price.save();
+      createdProduct = transformProduct(result);
       const creator = await User.findById("5c45e81816f9cf4db8e33bb4");
       // const creator = await User.findById(req.userId);
-      console.log("Creator::::::::::::::::::::::::: " + result);
+      
       if (!creator) {
         throw new Error('User not found.');
       }
-      console.log(creator);
-      console.log(createdProduct);
+      
       creator.createdProducts.push(product);
       await creator.save();
 

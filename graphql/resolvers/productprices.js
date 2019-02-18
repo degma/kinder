@@ -8,7 +8,6 @@ module.exports = {
   productprices: async ({pricelistId}) => {
     try {
       const productprices = await ProductPrice.find({pricelistId: pricelistId});
-      console.log("Precioooooooooooooooooo"+productprices);
       return productprices.map(productprice => {
         return transformProductPrice(productprice);
       });

@@ -22,11 +22,7 @@ const priceListSchema = new Schema({
   prodprices: [{
     product: {
       type: Schema.Types.ObjectId,
-      ref: 'Product'
-    },
-    price: {
-      type: Number,
-      required: false
+      ref: 'ProductPrice'
     }
   }
   ]

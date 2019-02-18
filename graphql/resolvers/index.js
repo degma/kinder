@@ -1,6 +1,6 @@
+// const eventsResolver = require('./events');
 const authResolver = require('./auth');
-const eventsResolver = require('./events');
-const bookingResolver = require('./booking');
+// const bookingResolver = require('./booking');
 const productResolver = require('./products');
 const categoryResolver = require('./categories');
 const genderResolver = require('./genders');
@@ -10,8 +10,8 @@ const pricelistResolver = require('./pricelists');
 
 const rootResolver = {
   ...authResolver,
-  ...eventsResolver,
-  ...bookingResolver,
+  // ...eventsResolver,
+  // ...bookingResolver,
   ...productResolver,
   ...categoryResolver,
   ...genderResolver,

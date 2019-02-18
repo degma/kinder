@@ -1,7 +1,7 @@
-const Event = require('../../models/event');
+// const Event = require('../../models/event');
 const PriceList = require('../../models/priceList');
 const ProductPrice = require('../../models/productprice');
-const Product =  require('../../models/product');
+const Product = require('../../models/product');
 const User = require('../../models/user');
 const Category = require('../../models/category');
 const Gender = require('../../models/gender');
@@ -9,31 +9,38 @@ const Manufacturer = require('../../models/manufacturer');
 const { dateToString } = require('../../helpers/date');
 
 
-const events = async eventIds => {
-  try {
-    const events = await Event.find({ _id: { $in: eventIds } });
-    return events.map(event => {
-      return transformEvent(event);
-    });
-  } catch (err) {
-    throw err;
-  }
-};
+// const events = async eventIds => {
+//   try {
+//     const events = await Event.find({ _id: { $in: eventIds } });
+//     return events.map(event => {
+//       return transformEvent(event);
+//     });
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
+// const singleEvent = async eventId => {
+//   try {
+//     const event = await Event.findById(eventId);
+//     return transformEvent(event);
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
-const singleEvent = async eventId => {
-  try {
-    const event = await Event.findById(eventId);
-    return transformEvent(event);
-  } catch (err) {
-    throw err;
-  }
-};
+// const transformEvent = event => {
+//   return {
+//     ...event._doc,
+//     _id: event.id,
+//     date: dateToString(event._doc.date),
+//     creator: user.bind(this, event.creator)
+//   };
+// };
 
 const product = async productId => {
   try {
     const product = await Product.findById(productId);
-    console.log("transforming product: " + product)
     return transformProduct(product);
   } catch (err) {
     throw err;
@@ -92,15 +99,6 @@ const category = async categoryId => {
 };
 
 
-const transformEvent = event => {
-  return {
-    ...event._doc,
-    _id: event.id,
-    date: dateToString(event._doc.date),
-    creator: user.bind(this, event.creator)
-  };
-};
-
 
 const transformGender = gender => {
   return {
@@ -117,7 +115,8 @@ const transformProduct = product => {
     genderId: gender.bind(this, product.genderId),
     manufacturerId: manufacturer.bind(this, product.manufacturerId),
     categoryId: category.bind(this, product.categoryId),
-    creator: user.bind(this, product.creator)
+    productprice: productprices.bind(this, product._doc.productprice),
+    creator: user.bind(this, product.creator),
   };
 };
 
@@ -166,26 +165,27 @@ const pricelist = async pricelistId => {
   }
 };
 
-const productprice = async productpriceId => {
+const productprices = async productpriceIds => {
   try {
-    const productprice = await ProductPrice.findById(productpriceId);
-    return transformProductPrice(productprice);
+    const productprices = await ProductPrice.find({ _id: { $in: productpriceIds } });
+    return productprices.map(prodprice => {
+      return transformProductPrice(prodprice);
+    });
   } catch (err) {
     throw err;
   }
 };
 
+
 const transformPriceList = pricelist => {
   return {
     ...pricelist._doc,
     _id: pricelist.id,
-    productId: product.bind(this, pricelist._doc.product),
-    productpriceId: productprice.bind(this, pricelist._doc.productprice),
+    prodprices: productprices.bind(this, pricelist.prodprices)
+
   }
 };
 
-exports.transformEvent = transformEvent;
-exports.transformBooking = transformBooking;
 exports.transformProduct = transformProduct;
 exports.transformCategory = transformCategory;
 exports.transformGender = transformGender;
@@ -193,6 +193,8 @@ exports.transformManufacturer = transformManufacturer;
 exports.transformProductPrice = transformProductPrice;
 exports.transformPriceList = transformPriceList;
 
+// exports.transformEvent = transformEvent;
+// exports.transformBooking = transformBooking;
 // exports.user = user;
 // exports.events = events;
 // exports.singleEvent = singleEvent;
