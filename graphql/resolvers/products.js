@@ -33,6 +33,7 @@ module.exports = {
       categoryId: fetchedCategory,
       genderId: fetchedGender,
       manufacturerId: fetchedManufacturer,
+      description: args.productInput.description,
       creator: "5c45e81816f9cf4db8e33bb4" //req.userId
     });
     
@@ -44,11 +45,11 @@ module.exports = {
         
     let createdProduct;
     try {
+      await price.save();
       product.productprice.push(price);
       const result = await product.save();
       fetchedPriceList.prodprices.push(price);
       await fetchedPriceList.save();
-      await price.save();
       createdProduct = transformProduct(result);
       const creator = await User.findById("5c45e81816f9cf4db8e33bb4");
       // const creator = await User.findById(req.userId);

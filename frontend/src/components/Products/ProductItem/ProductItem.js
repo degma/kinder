@@ -4,10 +4,10 @@ import './ProductItem.css';
 const eventItem = props => (
     <div className="pt-2 pr-2">
         <div className="card">
-            <div className="card-header">{props.gender.name} | {props.category.name} | ${props.price} </div>
+            <div className="card-header">{props.genderId.name} | {props.categoryId.name} </div>
             <div className="card-body text-primary">
                 <h5 className="card-title">{props.name}</h5>
-                <p className="card-text">Fabricante: {props.manufacturer.name}</p>
+                <p className="card-text">Fabricante: {props.manufacturerId.name}</p>
             </div>
         </div>
     </div>

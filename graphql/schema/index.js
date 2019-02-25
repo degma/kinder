@@ -32,6 +32,7 @@ type PriceList {
   name: String!
   validFrom: String!
   validTo: String!
+  status: String!
   prodprices: [ProductPrice]
   creator: User 
 }
@@ -119,6 +120,8 @@ type RootQuery {
   login(email: String!, password: String!): AuthData!
   pricelists: [PriceList!]!
   productprices(pricelistId: ID!): [ProductPrice!]!
+  currentPriceList: PriceList!
+  currentProdPrices: [ProductPrice!]!
     
 }
 

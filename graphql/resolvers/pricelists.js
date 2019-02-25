@@ -15,6 +15,15 @@ module.exports = {
       throw err;
     }
   },
+  currentPriceList: async () => {
+    try{
+      const pricelist = await PriceList.findOne({ status: "active"});
+      return transformPriceList(pricelist);
+    } catch (err) {
+      throw err;
+    }
+  }
+  ,
   createPriceList: async (args, req) => {
     // if (!req.isAuth) {
     //   throw new Error('Unauthenticated!');

@@ -178,6 +178,8 @@ const productprices = async productpriceIds => {
 
 
 const transformPriceList = pricelist => {
+  console.log("Transformed PRICE LIST");
+  console.log(...pricelist.id);
   return {
     ...pricelist._doc,
     _id: pricelist.id,

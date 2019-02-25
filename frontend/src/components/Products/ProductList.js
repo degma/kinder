@@ -7,14 +7,12 @@ const productList = props => {
   const products = props.products.map(product => {
     return (
       <ProductItem
-        key={product._id}
-        eventId={product._id}
-        name={product.name}
-        price={product.price}
-        category={product.category}
-        manufacturer={product.manufacturer}
-        gender={product.gender}
-        creatorId={product.creator._id}
+        key={product.productId._id}
+        name={product.productId.name}
+        categoryId={product.productId.categoryId}
+        manufacturerId={product.productId.manufacturerId}
+        genderId={product.productId.genderId}
+    
       />
     );
   });

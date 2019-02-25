@@ -11,6 +11,8 @@ const SuccessIndicator = require('react-success-indicator');
 class ProductsPage extends Component {
   state = {
     creating: false,
+    currentpricelistname: null,
+    currentpricelistid: null,
     products: [],
     categories: [],
     manufacturers: [],
@@ -21,6 +23,7 @@ class ProductsPage extends Component {
     selectedCategory: null,
     selectedGender: null,
     selectedManufacturer: null,
+    selectedPriceList: null,
     selectedOption: []
   };
 
@@ -31,15 +34,18 @@ class ProductsPage extends Component {
   constructor(props) {
     super(props);
     this.nameElRef = React.createRef();
+    this.descriptionElRef = React.createRef();
     this.priceElRef = React.createRef();
     this.categoryElRef = React.createRef();
     this.genderElRef = React.createRef();
     this.manufacturerElRef = React.createRef();
+    this.pricelistElRef = React.createRef();
   }
 
   componentDidMount() {
     this.fetchCategs();
     this.fetchProducts();
+    console.log("Productos!" + this.fetchProducts());
     this.fetchManu();
     this.fetchGenders();
     console.log("Categorias" + this.fetchCategs());
@@ -54,9 +60,10 @@ class ProductsPage extends Component {
   modalConfirmHandler = () => {
 
     const name = this.nameElRef.current.value;
+    const description = this.descriptionElRef.current.value;
     const price = +this.priceElRef.current.value;
     const category = this.state.selectedCategory._id;
-    const manufacturer = this.state.selectedManufacturer._id.toString();
+    const manufacturer = this.state.selectedManufacturer._id;
     const gender = this.state.selectedGender._id;
 
     if (
@@ -69,34 +76,46 @@ class ProductsPage extends Component {
       return;
     }
 
-    const product = { name, price, manufacturer, gender, category };
+    const product = { name, description, price, manufacturer, gender, category };
     console.log(product);
 
     const requestBody = {
       query: `
           mutation {
-            createProduct(productInput: {name: "${name}", manufacturer: "${manufacturer}", price: ${price}, gender: "${gender}", category: "${category}"} ) {
-              _id
-              name
-              manufacturer{
-                _id
-                name
+            createProduct( productInput: {
+              name: "${name}",
+              description: "${description}" ,
+              categoryId: "${category}",
+              manufacturerId: "${manufacturer}", 
+              genderId: "${gender}", 
+              pricelistId: "${this.state.currentpricelistid}",
+              price: ${price}, 
+                } ) {
+                  _id
+                  name
+                  description
+                  categoryId{
+                    name
+                  }
+                  manufacturerId{
+                    name
+                  }
+                  genderId{
+                    name
+                  }
+                  productprice{
+                    _id
+                    productId{
+                      name                      
+                    }
+                    pricelistId{
+                      name
+                    }
+                    price
+                  }
+                  
+                }
               }
-              gender {
-                _id
-                name
-              }
-              category {
-                _id
-                name
-              }
-              price
-              creator{
-                _id
-                email
-              }
-            }
-          }
         `
     };
 
@@ -119,25 +138,30 @@ class ProductsPage extends Component {
       .then(resData => {
         this.setState(prevState => {
           const updatedProducts = [...prevState.products];
-          console.log(resData.data.createProduct);
-          console.log("Updted PRODUCTS --->" + updatedProducts);
+          console.log(updatedProducts);
+          console.log(resData.data);
+          // console.log("Updted PRODUCTS --->" + updatedProducts);
+          // console.log("PUSH PROD" + resData.data.createProduct);
           updatedProducts.push({
-            _id: resData.data.createProduct._id,
-            name: resData.data.createProduct.name,
-            category: {
-              name: resData.data.createProduct.category.name
-            },
-            manufacturer: {
-              name: resData.data.createProduct.manufacturer.name
-            },
-            gender: {
-              name: resData.data.createProduct.gender.name
+            productId: {
+              _id: resData.data.createProduct._id,
+              name: resData.data.createProduct.name,
+              description: resData.data.createProduct.description,
+              categoryId:{
+                name: resData.data.createProduct.categoryId.name,
+              },
+              manufacturerId: {
+                name: resData.data.createProduct.manufacturerId.name,
+              },
+              genderId: {
+                name: resData.data.createProduct.genderId.name,
+              }
+
             },
             price: resData.data.createProduct.price,
-            creator: {
-              _id: this.context.userId
-            }
+            
           });
+          console.log("Updted PRODUCTS --->" + updatedProducts);
           return { products: updatedProducts };
 
         });
@@ -168,37 +192,34 @@ class ProductsPage extends Component {
 
   onSearchChange = (event) => {
     this.setState({ searchField: event.target.value });
-
-    // console.log(filteredProds);
   }
 
   fetchProducts() {
     this.setState({ isLoading: true });
     const requestBody = {
       query: `
-          query {
-            products {
-              _id
-              name
-              category{
+        query{
+          currentPriceList{
+            _id
+            name
+            prodprices{
+              productId{
                 _id
                 name
-              }
-              manufacturer {
-                _id
-                name
-              }
-              gender{
-                _id
-                name
+                categoryId{
+                  name
+                }
+                manufacturerId{
+                  name
+                }
+                genderId{
+                  name
+                }
               }
               price
-              creator{
-                _id
-                email
-              }
             }
           }
+        }
         `
     };
 
@@ -216,9 +237,13 @@ class ProductsPage extends Component {
         return res.json();
       })
       .then(resData => {
-        const products = resData.data.products;
+        const products = resData.data.currentPriceList.prodprices;
+        console.log("ESTOS SON LOS PRODUCTOSSSSSSSSSSSSSSSSSSSSSS" + products )
+        const pricelistid = resData.data.currentPriceList._id;
+        const pricelistName = resData.data.currentPriceList.name;
+
         if (this.isActive) {
-          this.setState({ products: products, isLoading: false });
+          this.setState({ products: products, currentpricelistid: pricelistid, currentpricelistname: pricelistName, isLoading: false });
         }
       })
       .catch(err => {
@@ -260,7 +285,6 @@ class ProductsPage extends Component {
         if (this.isActive) {
           this.setState({ categories: cates });
           console.log(this.state.categories);
-          console.log("productos" + this.state.products);
         }
       })
       .catch(err => {
@@ -369,6 +393,17 @@ class ProductsPage extends Component {
       this.setState({ selectedCategory: '' });
     }
   }
+
+  changeSelectPriceList = selectedOption => {
+
+    if (selectedOption !== null) {
+      this.setState({ selectedPriceList: selectedOption });
+      console.log(this.state.selectedPriceList);
+    } else {
+      this.setState({ selectedPriceList: '' });
+    }
+  }
+
   changeSelectGender = selectedOption => {
 
     if (selectedOption !== null) {
@@ -381,9 +416,15 @@ class ProductsPage extends Component {
 
   render() {
     const filteredProds = this.state.products.filter(product => {
-      return product.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-
-    })
+      // return product.productId.name.toLowerCase().includes(this.state.searchField.toLowerCase());
+      const query = this.state.searchField.toLowerCase();
+      return (
+      product.productId.name.toLowerCase().indexOf(query) >= 0 
+      || product.productId.genderId.name.toLowerCase().indexOf(query) >= 0
+      || product.productId.manufacturerId.name.toLowerCase().indexOf(query) >= 0
+      || product.productId.categoryId.name.toLowerCase().indexOf(query) >= 0
+      )
+    });
     return (
       <React.Fragment>
         <div className="container-fluid">
@@ -402,8 +443,8 @@ class ProductsPage extends Component {
                           <input type="text" id="name" ref={this.nameElRef} className="form-control" placeholder="Nombre del producto" />
                         </div>
                         <div className="form-group col-md-12">
-                          <label htmlFor="inputEmail4">Precio</label>
-                          <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
+                          <label htmlFor="inputEmail4">Descripción</label>
+                          <textarea type="text" id="name" ref={this.descriptionElRef} className="form-control" placeholder="Descripción del producto" />
                         </div>
                         <div className="form-group col-md-12">
                           <label htmlFor="inputCity">Fabricante</label>
@@ -446,6 +487,14 @@ class ProductsPage extends Component {
                             getOptionLabel={opt => opt.name}
                             getOptionValue={opt => opt._id}
                           />
+                        </div>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputEmail4">Lista de Precios</label>
+                          <input type="text" id="name" ref={this.pricelistElRef} className="form-control" defaultValue={this.state.currentpricelistname} readOnly />
+                        </div>
+                        <div className="form-group col-md-12">
+                          <label htmlFor="inputEmail4">Precio</label>
+                          <input type="number" id="price" ref={this.priceElRef} className="form-control" placeholder="Precio" />
                         </div>
                         <div className="form-group col-md-12 text-right pt-4">
                           <button type="button" className="btn btn-success" onClick={this.modalConfirmHandler}>+ Agregar Producto</button>

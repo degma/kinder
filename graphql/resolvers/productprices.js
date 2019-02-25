@@ -1,4 +1,5 @@
 const ProductPrice = require('../../models/productprice');
+
 const User = require('../../models/user');
 
 const { transformProductPrice } = require('./merge');
@@ -15,6 +16,7 @@ module.exports = {
       throw err;
     }
   },
+
   createProductPrice: async (args, req) => {
     // if (!req.isAuth) {
     //   throw new Error('Unauthenticated!');
