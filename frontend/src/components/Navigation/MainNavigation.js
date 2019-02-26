@@ -16,9 +16,6 @@ const mainNavigation = props => (
             </button>
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
               <ul className="navbar-nav mr-auto">
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/products">Articulos</NavLink>
-                </li>
                 {!context.token && (
                   <li className="nav-item">
                     <NavLink className="nav-link" to="/auth">Ingresar</NavLink>
@@ -26,6 +23,12 @@ const mainNavigation = props => (
                 )}
                 {context.token && (
                   <React.Fragment>
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/pricelist">Lista de Precios</NavLink>
+                    </li>
+                    <li className="nav-item">
+                      <NavLink className="nav-link" to="/products">Articulos</NavLink>
+                    </li>
                     <li className="nav-item">
                       <button className="btn btn-secondary btn-sm" onClick={context.logout}>Logout</button>
                     </li>

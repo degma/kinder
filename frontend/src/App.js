@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import AuthPage from './pages/Auth';
-import BookingsPage from './pages/Bookings';
-
 import ProductsPage from './pages/Products';
+import PriceListPage from './pages/PriceList';
 import MainNavigation from './components/Navigation/MainNavigation';
 import AuthContext from './context/auth-context';
 
@@ -15,7 +14,7 @@ class App extends Component {
     userId: null
   };
 
-  login = (token, userId, tokenExpiration) => {
+  login = (token, userId, tokenExpiration) => { 
     this.setState({ token: token, userId: userId });
   };
 
@@ -47,9 +46,9 @@ class App extends Component {
                 )}
                 
                 <Route path="/products" component={ProductsPage} />
-                
+                <Route path="/pricelist" component={PriceListPage} />
                 {this.state.token && (
-                  <Route path="/bookings" component={BookingsPage} />
+                  <Route path="/products" component={ProductsPage} />
                 )}
                 {!this.state.token && <Redirect to="/auth" exact />}
               </Switch>

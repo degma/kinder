@@ -62,17 +62,17 @@ const user = async userId => {
 };
 
 
-const gender = async genderId => {
-  try {
-    const gender = await Gender.findById(genderId);
-    return {
-      ...gender._doc,
-      _id: gender.id,
-    };
-  } catch (err) {
-    throw err;
-  }
-};
+// const gender = async genderId => {
+//   try {
+//     const gender = await Gender.findById(genderId);
+//     return {
+//       ...gender._doc,
+//       _id: gender.id,
+//     };
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
 const manufacturer = async manufacturerId => {
   try {
@@ -86,19 +86,17 @@ const manufacturer = async manufacturerId => {
   }
 };
 
-const category = async categoryId => {
-  try {
-    const category = await Category.findById(categoryId);
-    return {
-      ...category._doc,
-      _id: category.id,
-    };
-  } catch (err) {
-    throw err;
-  }
-};
-
-
+// const category = async categoryId => {
+//   try {
+//     const category = await Category.findById(categoryId);
+//     return {
+//       ...category._doc,
+//       _id: category.id,
+//     };
+//   } catch (err) {
+//     throw err;
+//   }
+// };
 
 const transformGender = gender => {
   return {
@@ -112,9 +110,9 @@ const transformProduct = product => {
   return {
     ...product._doc,
     _id: product.id,
-    genderId: gender.bind(this, product.genderId),
+    genderId: genders.bind(this, product._doc.genderId),
     manufacturerId: manufacturer.bind(this, product.manufacturerId),
-    categoryId: category.bind(this, product.categoryId),
+    categoryId: categories.bind(this, product._doc.categoryId),
     productprice: productprices.bind(this, product._doc.productprice),
     creator: user.bind(this, product.creator),
   };
@@ -136,15 +134,38 @@ const transformCategory = category => {
   };
 };
 
-const transformBooking = booking => {
-  return {
-    ...booking._doc,
-    _id: booking.id,
-    user: user.bind(this, booking._doc.user),
-    event: singleEvent.bind(this, booking._doc.event),
-    createdAt: dateToString(booking._doc.createdAt),
-    updatedAt: dateToString(booking._doc.updatedAt)
-  };
+const categories = async categoryIds => {
+  try {
+    const categories = await Category.find({ _id: { $in: categoryIds } });
+    return categories.map(category => {
+      return transformCategory(category);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+const genders = async genderIds => {
+  try {
+    const genders = await Gender.find({ _id: { $in: genderIds } });
+    return genders.map(gender => {
+      return transformGender(gender);
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+
+const productprices = async productpriceIds => {
+  try {
+    const productprices = await ProductPrice.find({ _id: { $in: productpriceIds } });
+    return productprices.map(prodprice => {
+      return transformProductPrice(prodprice);
+    });
+  } catch (err) {
+    throw err;
+  }
 };
 
 const transformProductPrice = productprice => {
@@ -160,17 +181,6 @@ const pricelist = async pricelistId => {
   try {
     const pricelist = await PriceList.findById(pricelistId);
     return transformPriceList(pricelist);
-  } catch (err) {
-    throw err;
-  }
-};
-
-const productprices = async productpriceIds => {
-  try {
-    const productprices = await ProductPrice.find({ _id: { $in: productpriceIds } });
-    return productprices.map(prodprice => {
-      return transformProductPrice(prodprice);
-    });
   } catch (err) {
     throw err;
   }

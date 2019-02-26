@@ -6,14 +6,17 @@ import ProductItem from './ProductItem/ProductItem';
 const productList = props => {
   const products = props.products.map(product => {
     return (
+      
       <ProductItem
         key={product.productId._id}
         name={product.productId.name}
+        description={product.productId.description}
         categoryId={product.productId.categoryId}
         manufacturerId={product.productId.manufacturerId}
         genderId={product.productId.genderId}
-    
+        price={product.price}   
       />
+      
     );
   });
 

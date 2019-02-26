@@ -4,9 +4,9 @@ module.exports = buildSchema(`
 
 type Product {
   _id: ID!
-  categoryId: Category!
+  categoryId: [Category!]
   manufacturerId: Manufacturer!
-  genderId: Gender!
+  genderId: [Gender!]
   name: String!
   description: String
   pricelistId: PriceList!
@@ -74,9 +74,9 @@ input UserInput {
 input ProductInput {
   name: String!
   description: String
-  categoryId: ID!
+  categoryId: [ID!]
   manufacturerId: ID!
-  genderId: ID!
+  genderId: [ID!]
   pricelistId: ID!
   price: Float
 }

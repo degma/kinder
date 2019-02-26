@@ -20,8 +20,8 @@ class ProductsPage extends Component {
     isLoading: false,
     isSuccess: false,
     searchField: '',
-    selectedCategory: null,
-    selectedGender: null,
+    selectedCategory: [],
+    selectedGender: [],
     selectedManufacturer: null,
     selectedPriceList: null,
     selectedOption: []
@@ -62,19 +62,19 @@ class ProductsPage extends Component {
     const name = this.nameElRef.current.value;
     const description = this.descriptionElRef.current.value;
     const price = +this.priceElRef.current.value;
-    const category = this.state.selectedCategory._id;
+    const category = this.state.selectedCategory.map(cat =>  '"' + cat._id + '"');
     const manufacturer = this.state.selectedManufacturer._id;
-    const gender = this.state.selectedGender._id;
+    const gender = this.state.selectedGender.map(gen=> '"' + gen._id + '"');
 
-    if (
-      name.trim().length === 0 ||
-      price <= 0 ||
-      category.length === 0 ||
-      manufacturer.length === 0 ||
-      gender.length === 0
-    ) {
-      return;
-    }
+    // if (
+    //   name.trim().length === 0 ||
+    //   price <= 0 ||
+    //   category.length === 0 ||
+    //   manufacturer.length === 0 ||
+    //   gender.length === 0
+    // ) {
+    //   return;
+    // }
 
     const product = { name, description, price, manufacturer, gender, category };
     console.log(product);
@@ -85,9 +85,9 @@ class ProductsPage extends Component {
             createProduct( productInput: {
               name: "${name}",
               description: "${description}" ,
-              categoryId: "${category}",
+              categoryId: [${category}],
               manufacturerId: "${manufacturer}", 
-              genderId: "${gender}", 
+              genderId: [${gender}], 
               pricelistId: "${this.state.currentpricelistid}",
               price: ${price}, 
                 } ) {
@@ -118,7 +118,7 @@ class ProductsPage extends Component {
               }
         `
     };
-
+    console.log(requestBody);
     const token = this.context.token;
 
     fetch('http://localhost:8000/graphql', {
@@ -147,15 +147,15 @@ class ProductsPage extends Component {
               _id: resData.data.createProduct._id,
               name: resData.data.createProduct.name,
               description: resData.data.createProduct.description,
-              categoryId:{
+              categoryId:[{
                 name: resData.data.createProduct.categoryId.name,
-              },
+              }],
               manufacturerId: {
                 name: resData.data.createProduct.manufacturerId.name,
               },
-              genderId: {
+              genderId: [{
                 name: resData.data.createProduct.genderId.name,
-              }
+              }]
 
             },
             price: resData.data.createProduct.price,
@@ -206,6 +206,7 @@ class ProductsPage extends Component {
               productId{
                 _id
                 name
+                description
                 categoryId{
                   name
                 }
@@ -375,7 +376,6 @@ class ProductsPage extends Component {
   }
 
   changeSelectManu = selectedOption => {
-
     if (selectedOption !== null) {
       this.setState({ selectedManufacturer: selectedOption });
       console.log(this.state.selectedManufacturer);
@@ -385,32 +385,33 @@ class ProductsPage extends Component {
   }
 
   changeSelectCate = selectedOption => {
-
     if (selectedOption !== null) {
-      this.setState({ selectedCategory: selectedOption });
+      // var selcats = this.state.selectedCategory;
+      // selcats.push(selectedOption);
+      this.setState({selectedCategory: selectedOption});
       console.log(this.state.selectedCategory);
     } else {
       this.setState({ selectedCategory: '' });
     }
   }
+  
+    changeSelectGender = selectedOption => {
+      if (selectedOption !== null) {
+        // var selgends = this.state.selectedGender;
+        // selgends.push(selectedOption);
+        this.setState({selectedGender: selectedOption});
+        console.log(this.state.selectedGender);
+      } else {
+        this.setState({ selectedGender: '' });
+      }
+    }
 
   changeSelectPriceList = selectedOption => {
-
     if (selectedOption !== null) {
       this.setState({ selectedPriceList: selectedOption });
       console.log(this.state.selectedPriceList);
     } else {
       this.setState({ selectedPriceList: '' });
-    }
-  }
-
-  changeSelectGender = selectedOption => {
-
-    if (selectedOption !== null) {
-      this.setState({ selectedGender: selectedOption });
-      console.log(this.state.selectedGender);
-    } else {
-      this.setState({ selectedGender: '' });
     }
   }
 
@@ -430,7 +431,7 @@ class ProductsPage extends Component {
         <div className="container-fluid">
           <div className="row">
             {this.context.token && (
-              <div className="col-md-3 pt-4">
+              <div className="col-md-4 pt-4">
                 {!this.state.isSuccess ? (
                   <div className="card w-100">
                     <div className="card-header text-center">
@@ -464,6 +465,7 @@ class ProductsPage extends Component {
                           <label htmlFor="inputCity">Genero</label>
                           <Select
                             options={this.state.genders}
+                            isMulti
                             onChange={this.changeSelectGender}
                             ref={this.genderElRef}
                             id="gender"
@@ -478,6 +480,7 @@ class ProductsPage extends Component {
                           <label htmlFor="inputState">Categoría</label>
                           <Select
                             options={this.state.categories}
+                            isMulti
                             onChange={this.changeSelectCate}
                             ref={this.categoryElRef}
                             id="category"
@@ -515,7 +518,7 @@ class ProductsPage extends Component {
                   )}
               </div>
             )}
-            <div className="col-md-9">
+            <div className="col-md-8">
               <SearchBox searchChange={this.onSearchChange} />
               {this.state.isLoading ? (
                 <div className="pt-5">

@@ -23,9 +23,11 @@ module.exports = {
     // if (!req.isAuth) {
     //   throw new Error('Unauthenticated!');
     // }
-    const fetchedCategory = await Category.findOne({_id: args.productInput.categoryId });
+    // const fetchedCategory = await Category.findOne({_id: args.productInput.categoryId });
+    const fetchedCategory = await Category.find({ _id: { $in: args.productInput.categoryId } });
     const fetchedManufacturer = await Manufacturer.findOne({_id: args.productInput.manufacturerId });
-    const fetchedGender = await Gender.findOne({_id: args.productInput.genderId });
+    // const fetchedGender = await Gender.findOne({_id: args.productInput.genderId });
+    const fetchedGender = await Gender.find({ _id: { $in: args.productInput.genderId } });
     const fetchedPriceList = await PriceList.findOne({_id: args.productInput.pricelistId})
     
     const product = new Product({

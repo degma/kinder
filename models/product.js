@@ -12,14 +12,14 @@ const productSchema = new Schema(
       type: String,
       required: false
     },
-    categoryId: {
+    categoryId: [{
       type: Schema.Types.ObjectId,
       ref: 'Category'
-    },
-    genderId: {
+    }],
+    genderId: [{
       type: Schema.Types.ObjectId,
       ref: 'Gender'
-    },
+    }],
     manufacturerId: {
       type: Schema.Types.ObjectId,
       ref: 'Manufacturer'
