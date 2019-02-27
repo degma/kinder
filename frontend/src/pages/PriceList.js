@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
 import ProductList from '../components/Products/ProductList';
 import Spinner from '../components/Spinner/Spinner';
-import Select from 'react-select';
+
 import SearchBox from '../components/SearchBox/SearchBox';
 // const SweetAlert = require('react-bootstrap-sweetalert');
-const SuccessIndicator = require('react-success-indicator');
+
 //import './Events.css';
 
 class ProductsPage extends Component {
