@@ -160,9 +160,7 @@
         .products .product-card:nth-child(2) {
             flex: 2 46%;
         }
-    .tr {
-        font-size: 10px;
-    }
+        
     }
     
     @media ( max-width: 600px ) {
@@ -190,12 +188,9 @@
     }
     
     .badge{
-        color: #000000;
+        color: #ffffff;
         font-weight: 7;
-        background-color: #e9eaec;
-    }
-    .categorias{
-        font-size: 12px;
+        background-color: #667ea9;
     }
     
     .breadcrumb {
@@ -210,7 +205,3 @@
         padding: 0.2rem 0.2rem;
     }
     
-    .botones-card{
-        padding: 0.2;
-        font-size: .8rem;
-    }

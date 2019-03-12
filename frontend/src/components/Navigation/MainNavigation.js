@@ -30,6 +30,9 @@ const mainNavigation = props => (
                       <NavLink className="nav-link" to="/products">Articulos</NavLink>
                     </li>
                     <li className="nav-item">
+                      <NavLink className="nav-link" to="/fabricantes">Fabricantes</NavLink>
+                    </li>
+                    <li className="nav-item">
                       <button className="btn btn-secondary btn-sm" onClick={context.logout}>Logout</button>
                     </li>
                   </React.Fragment>

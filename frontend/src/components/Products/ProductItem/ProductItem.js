@@ -1,36 +1,47 @@
 import React from 'react';
 import './ProductItem.css';
 
-const eventItem = props => (
+const productItem = props => (
         
+    <tr>
+      <th scope="row">{props.name}</th>
+      <td>{props.description}</td>
+      <td>{props.manufacturerId.name} </td>
+      <td>{props.genderId.map(cat => { return ( <span className="badge mr-1 mb-1">{cat.name}</span>)})}</td>
+      <td>{props.categoryId.map(cat => { return ( <span className="badge mr-1 mb-1">{cat.name}</span>)})}</td>
+      <td>$ {props.price}</td>
+    </tr>
+ 
+/*         
 		<div className="product-card">
 			<div className="product-image">
-				{/* <img src="https://cdn.shopify.com/s/files/1/0938/8938/products/10231100205_1_1315x1800_300_CMYK_1024x1024.jpeg?v=1445623369"/> */}
+
 			</div>
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
+                    <ol className="breadcrumb">
                     {props.manufacturerId.name} | &nbsp;
-                    {props.genderId.map(cat => { return ( <li class="breadcrumb-item active" aria-current="page">{cat.name}</li>)})}                        
+                    {props.genderId.map(cat => { return ( <li className="breadcrumb-item" aria-current="page">{cat.name}</li>)})}                        
                     </ol>
                 </nav>
 			<div className="product-info">
                 <div className="row">
-                    <div className="col-md-9">
+                    <div className="col-md-7">
                         <h5>{props.name}</h5>
+                        <h6>{props.description}</h6> 
                     </div>
                     <div className="col-md-3 text-center">
-                        ${props.price}
+                        <div className="mt-2">
+                        {props.categoryId.map(cat => { return ( <span className="badge mr-1">{cat.name}</span>)})}        
+                        </div>
+                    </div>
+                    <div className="col-md-2 text-center">
+                        <h2>${props.price}</h2>
                     </div>
                 </div>
-                <div> <h6>{props.description}</h6> </div>
-                <div className="mt-2">
-                    {props.categoryId.map(cat => { return ( <span class="badge badge-secondary mr-1">{cat.name}</span>)})}        
-                </div>
-                
 			</div>
 		</div>
-
+ */
 
 );
 
-export default eventItem;
+export default productItem;

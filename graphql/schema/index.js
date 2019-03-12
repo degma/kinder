@@ -134,8 +134,8 @@ type RootMutation {
   createCategory(categoryInput: CategoryInput): Category
   createManufacturer(manufacturerInput: ManufacturerInput): Manufacturer
   createGender(genderInput: GenderInput): Gender
-    
   
+    
 }
 
 schema {

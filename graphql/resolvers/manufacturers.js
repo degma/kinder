@@ -23,7 +23,9 @@ module.exports = {
       address: args.manufacturerInput.address,
       phone: args.manufacturerInput.phone,
       primary_contact_name: args.manufacturerInput.primary_contact_name, 
-      primary_contact_phone: args.manufacturerInput.primary_contact_phone
+      primary_contact_phone: args.manufacturerInput.primary_contact_phone,
+      creator: req.userId
+
 
     });
     console.log(manu);
@@ -31,13 +33,13 @@ module.exports = {
     try {
       const result = await manu.save();
       createdManu = transformManufacturer(result);
-      const creator = await User.findById(req.userId);
+      // const creator = await User.findById(req.userId);
 
-      if (!creator) {
-        throw new Error('User not found.');
-      }
-      creator.createdManu.push(manu);
-      await creator.save();
+      // if (!creator) {
+      //   throw new Error('User not found.');
+      // }
+      // creator.createdManu.push(manu);
+      // await creator.save();
       return createdManu;
     } catch (err) {
       console.log(err);

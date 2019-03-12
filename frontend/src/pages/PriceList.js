@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
 import ProductList from '../components/Products/ProductList';
 import Spinner from '../components/Spinner/Spinner';
-
+import './PriceList.css';
 import SearchBox from '../components/SearchBox/SearchBox';
 // const SweetAlert = require('react-bootstrap-sweetalert');
 
@@ -163,7 +163,23 @@ class ProductsPage extends Component {
                   <Spinner />
                 </div>
               ) : (
-                  <ProductList products={filteredProds} />
+                <div className="col-md-12 p-1">
+                  <table className="table table-sm table-hover">
+                    <thead className="thead-light">
+                      <tr>
+                        <th scope="col">Nombre Articulo</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Fabricante</th>
+                        <th scope="col">Genero</th>
+                        <th scope="col">Categorías</th>
+                        <th scope="col">Precio</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                      <ProductList products={filteredProds} />
+                      </tbody>
+                    </table>
+                    </div>
                 )}
 
             </div>

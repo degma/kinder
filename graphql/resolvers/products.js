@@ -36,7 +36,7 @@ module.exports = {
       genderId: fetchedGender,
       manufacturerId: fetchedManufacturer,
       description: args.productInput.description,
-      creator: "5c45e81816f9cf4db8e33bb4" //req.userId
+      creator: req.userId
     });
     
     const price = new ProductPrice({
@@ -53,8 +53,7 @@ module.exports = {
       fetchedPriceList.prodprices.push(price);
       await fetchedPriceList.save();
       createdProduct = transformProduct(result);
-      const creator = await User.findById("5c45e81816f9cf4db8e33bb4");
-      // const creator = await User.findById(req.userId);
+      const creator = await User.findById(req.userId);
       
       if (!creator) {
         throw new Error('User not found.');

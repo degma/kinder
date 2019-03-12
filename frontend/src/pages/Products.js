@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
-import ProductList from '../components/Products/ProductList';
+import ProductCardList from '../components/Products/ProductCardList';
 import Spinner from '../components/Spinner/Spinner';
 import Select from 'react-select';
 import SearchBox from '../components/SearchBox/SearchBox';
@@ -24,6 +24,7 @@ class ProductsPage extends Component {
     selectedGender: [],
     selectedManufacturer: null,
     selectedPriceList: null,
+    selectedProduct: null,
     selectedOption: []
   };
 
@@ -40,22 +41,25 @@ class ProductsPage extends Component {
     this.genderElRef = React.createRef();
     this.manufacturerElRef = React.createRef();
     this.pricelistElRef = React.createRef();
+
+    this.modalCancelHandler = this.modalCancelHandler.bind(this);
   }
 
   componentDidMount() {
     this.fetchCategs();
     this.fetchProducts();
-    console.log("Productos!" + this.fetchProducts());
     this.fetchManu();
     this.fetchGenders();
-    console.log("Categorias" + this.fetchCategs());
-    console.log("Genders" + this.fetchGenders());
-
+    
   }
 
   startCreateEventHandler = () => {
     this.setState({ creating: true });
   };
+
+  modalconfirmBorrar  = (prodId) => {
+    alert(prodId);
+  }
 
   modalConfirmHandler = () => {
 
@@ -77,7 +81,6 @@ class ProductsPage extends Component {
     // }
 
     const product = { name, description, price, manufacturer, gender, category };
-    console.log(product);
 
     const requestBody = {
       query: `
@@ -105,12 +108,6 @@ class ProductsPage extends Component {
                   }
                   productprice{
                     _id
-                    productId{
-                      name                      
-                    }
-                    pricelistId{
-                      name
-                    }
                     price
                   }
                   
@@ -138,30 +135,24 @@ class ProductsPage extends Component {
       .then(resData => {
         this.setState(prevState => {
           const updatedProducts = [...prevState.products];
-          console.log(updatedProducts);
-          console.log(resData.data);
-          // console.log("Updted PRODUCTS --->" + updatedProducts);
-          // console.log("PUSH PROD" + resData.data.createProduct);
+          console.log("resDATA");
+          console.log(resData);
           updatedProducts.push({
             productId: {
               _id: resData.data.createProduct._id,
               name: resData.data.createProduct.name,
               description: resData.data.createProduct.description,
-              categoryId:[{
-                name: resData.data.createProduct.categoryId.name,
-              }],
+              categoryId: resData.data.createProduct.categoryId.map(cats => ({name: cats.name})),
               manufacturerId: {
-                name: resData.data.createProduct.manufacturerId.name,
+                name: resData.data.createProduct.manufacturerId.name
               },
-              genderId: [{
-                name: resData.data.createProduct.genderId.name,
-              }]
+              genderId: resData.data.createProduct.genderId.map(gens => ({name: gens.name})),
 
             },
-            price: resData.data.createProduct.price,
+            price: resData.data.createProduct.productprice[0].price
             
           });
-          console.log("Updted PRODUCTS --->" + updatedProducts);
+          
           return { products: updatedProducts };
 
         });
@@ -420,11 +411,11 @@ class ProductsPage extends Component {
       // return product.productId.name.toLowerCase().includes(this.state.searchField.toLowerCase());
       const query = this.state.searchField.toLowerCase();
       return (
-      product.productId.name.toLowerCase().indexOf(query) >= 0 
-      || product.productId.genderId.name.toLowerCase().indexOf(query) >= 0
-      || product.productId.manufacturerId.name.toLowerCase().indexOf(query) >= 0
-      || product.productId.categoryId.name.toLowerCase().indexOf(query) >= 0
-      )
+        product.productId.name.toLowerCase().indexOf(query) >= 0 
+        || product.productId.genderId.map(gen => gen.name.toLowerCase().indexOf(query)) >= 0
+        || product.productId.manufacturerId.name.toLowerCase().indexOf(query) >= 0
+        || product.productId.categoryId.map(cat => cat.name.toLowerCase().indexOf(query)) >= 0
+        )
     });
     return (
       <React.Fragment>
@@ -510,7 +501,9 @@ class ProductsPage extends Component {
                       <div className="pt-5">
                         <div className="form-group col-md-12">
                           <p><SuccessIndicator size='96px' color='green' /></p>
+                          <br/>
                           <p> Articulo agregado! </p>
+                          <br/>
                           <button type="button" className="btn btn-success" onClick={this.successHandler}>OK!</button>
                         </div>
                       </div>
@@ -525,8 +518,12 @@ class ProductsPage extends Component {
                   <Spinner />
                 </div>
               ) : (
-                  <ProductList products={filteredProds} />
+                  <ProductCardList 
+                    products={filteredProds} 
+                    modalconfirmBorrar ={this.modalconfirmBorrar}
+                  />
                 )}
+
 
             </div>
 
