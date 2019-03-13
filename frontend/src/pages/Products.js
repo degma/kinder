@@ -118,7 +118,7 @@ class ProductsPage extends Component {
     console.log(requestBody);
     const token = this.context.token;
 
-    fetch('http://localhost:8000/graphql', {
+    fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -215,7 +215,7 @@ class ProductsPage extends Component {
         `
     };
 
-    fetch('http://localhost:8000/graphql', {
+    fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -258,7 +258,7 @@ class ProductsPage extends Component {
         `
     };
 
-    fetch('http://localhost:8000/graphql', {
+    fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -296,7 +296,7 @@ class ProductsPage extends Component {
         `
     };
 
-    fetch('http://localhost:8000/graphql', {
+    fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
@@ -335,7 +335,7 @@ class ProductsPage extends Component {
         `
     };
 
-    fetch('http://localhost:8000/graphql', {
+    fetch('http://localhost:8080/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {

@@ -12,7 +12,7 @@ const categories = async () => {
                 `
         };
     
-        fetch('http://localhost:8000/graphql', {
+        fetch('http://localhost:8080/graphql', {
             method: 'POST',
             body: JSON.stringify(requestBody),
             headers: {
