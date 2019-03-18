@@ -1,9 +1,0 @@
-{
-    "env": {
-        "MONGO_USER": "admin",
-        "MONGO_PASSWORD": "xpsm1530",
-        "MONGO_STRING": "mongodb+srv://admin:xpsm1530@cluster0-wri1l.gcp.mongodb.net/test?retryWrites=true",
-        "MONGO_SERVER": "//127.0.0.1:27017",
-        "PORT":"8080"
-    }
-}
